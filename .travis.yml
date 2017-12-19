@@ -1,3 +1,26 @@
+
+sudo: required
 language: java
+
 jdk:
   - oraclejdk7
+
+
+script:
+  - mvn clean cobertura:cobertura -Dtest=OptimizedMobileViewportMetaTagTest#metaTagIsRendered -DfailIfNoTests=false
+
+before_deploy:
+- tar -zcvf coverage-result.tar.gz /home/travis/build/leusonmario/wicket-bootstrap/target/site/cobertura
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "E/0FF47LuDnkIe4sMdR3kuXW8n97EJOW9Zn7SWo1+yE7Y2OO4sppJnBOUE8zK0wzn0trQJCVaY/iiArDKmfpJyKlBEmDR0G+B0tA5ieMjwmygiBBsczBDrr6dV4iWxVlr+A9nDWwurRzRMTXnd5DaQbTA1fMFdMyGCXc10Vlke6havsMZ/tyv0x0RPZrhPRZnRw1OIs8Ug9OiF87+2fOnPgF9aS8xPuZ1vP7FyTLxqK98R7YpENxQI1/xrSkAPsFKiOmMHVO0BeXYDWnFaVMtE/LR+wO2rNPKgwH+x4VPQr/jJhf70tGBfOehgFgYEoiFEfCDWO+W5NePfEQecRwJsT/QI+93IvNd7Snoul0EyUhqt61uXcYT/bVyEk3BRyoUq5jnf/1yMTMKScjEeOYj8MeLBsK4K32EoTY1Y87w5CoKDUPSSP70NOYE7i6VI1r4YRsIdcZ5CHpYahURgpfWWwlWAOPeW8wMPzA+i/dhE7ZaKVAflrydFAw8egLLQjVEf+Tyxu1A8ZIhxTmYYWrC5M8CWIOCPpUlJoe1cOECM675DGi8qgV8pgBAiS0eIXCMCSilFLXcp89tK1BItuwgDlqbb5hcY8T9KP8lh4XDU1tBoizziXFP9W/IwbRO3CxUIQOAFTfc961C9w26SqiOtEHuGKCBVapL+XHaHnhtIU="
+
+
+  file: coverage-result.tar.gz
+  file_glob: true
+  overwrite: true
+  skip_cleanup: true
+  on:
+    tags: true
